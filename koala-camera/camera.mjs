@@ -4,6 +4,7 @@ export const CAMERA_STATES = Object.freeze({
   warn: {desktop:1.075,mobile:1.055,omega:1.0},
   cry: {desktop:1.18,mobile:1.13,omega:.95},
   recovery: {desktop:1.01,mobile:1.007,omega:.85},
+  disappointed: {desktop:1.065,mobile:1.045,omega:.85},
   happy: {desktop:1.0,mobile:1.0,omega:.85}
 });
 export function damp(position, velocity, target, omega, dt) {

@@ -16,3 +16,7 @@ This is a camera-only experiment over the existing still-art renderer and CSS ef
 Public HTTPS inspection from the cloud environment was blocked by a proxy `403 Forbidden` / tunnel failure for `fedia12.github.io`. Local browser checks do not establish that the public page or microphone was tested over HTTPS. GitHub Pages deployment status must be recorded separately from browser test results. The existing public game was reported working by the user.
 
 Production brief for the missing character animation: https://github.com/fedia12/fayeb.github.io/blob/koala-animation-system/koala/animation/ASSET-BRIEF.md
+
+## Automatic ending update
+
+The camera experiment now shares the threshold-based, non-blocking ending flow with the main game. Current verification is recorded in `../koala/ENDING-TEST-RESULTS.md`. The new `disappointed` terminal target is intentionally wider than the live-noise crying close-up, and the fixed camera remains stationary. Genuine articulated ending animation is still missing; see `../koala/ENDING-ANIMATION-ASSETS.md`.

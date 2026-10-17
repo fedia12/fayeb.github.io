@@ -46,7 +46,7 @@ async def main():
     else:assert await scale(page)==1
     await page.click('[data-demo=loud]');await advance(page,9000)
     zoom_before=await scale(page)
-    await page.click('[data-demo=finish]');await page.click('#dismissResult');await advance(page,9000)
+    await page.click('[data-demo=success]');await advance(page,9000)
     assert await state(page)=='happy'
     if mode=='cinematic':assert await scale(page)<zoom_before-.04
     else:assert await scale(page)==1

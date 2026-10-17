@@ -1,8 +1,8 @@
 """Run with Python Playwright and system Chromium; no microphone needed for demo tests."""
-import asyncio, json
+import asyncio, json, os
 from pathlib import Path
 from playwright.async_api import async_playwright
-URL='http://127.0.0.1:8080/'
+URL=os.environ.get('KOALA_TEST_URL','http://127.0.0.1:8080/')
 async def main():
  async with async_playwright() as p:
   browser=await p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
@@ -39,8 +39,10 @@ async def main():
   assert not await page.locator('.tears').is_visible()
   await page.clock.run_for(3000)
   assert await page.locator('#room').get_attribute('data-state')=='sleep'
-  await page.click('[data-demo=finish]')
-  assert await page.locator('#result').evaluate('(e)=>e.open')
+  await page.click('[data-demo=success]')
+  assert await page.locator('#result').count()==0
+  await page.clock.run_for(1200)
+  assert await page.locator('#endingSummary').is_visible()
   assert await page.locator('#room').get_attribute('data-state')=='happy'
   assert await page.locator('#timer').inner_text()=='00:00'
   assert not await page.locator('.tears').is_visible()
@@ -71,9 +73,11 @@ async def main():
   await page.clock.run_for(2000)
   assert await page.locator('#room').get_attribute('data-state')=='sleep'
   await page.clock.run_for(60000)
-  assert await page.locator('#result').evaluate('(e)=>e.open')
+  assert await page.locator('#result').count()==0
+  await page.clock.run_for(1200)
+  assert await page.locator('#endingSummary').is_visible()
   assert await page.locator('#timer').inner_text()=='00:00'
-  await page.click('#dismissResult')
+  assert await page.locator('dialog[open]').count()==0
   for width in [320,768,1200]:
    await page.set_viewport_size({'width':width,'height':900})
    assert await page.evaluate('document.documentElement.scrollWidth<=innerWidth')

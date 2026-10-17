@@ -1,5 +1,5 @@
 """Genuine getUserMedia/Web Audio lifecycle using Chromium's synthetic microphone."""
-import asyncio
+import asyncio, os
 from playwright.async_api import async_playwright
 async def main():
  async with async_playwright() as p:
@@ -7,7 +7,7 @@ async def main():
   page=await b.new_page(permissions=['microphone'],viewport={'width':1280,'height':1000})
   errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   await page.add_init_script('''window.testStreams=[]; const original=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);navigator.mediaDevices.getUserMedia=async options=>{let s=await original(options);testStreams.push(s);return s;}''')
-  await page.goto('http://127.0.0.1:8080/')
+  await page.goto(os.environ.get('KOALA_TEST_URL','http://127.0.0.1:8080/'))
   await page.click('#start');await page.click('#calibrate')
   await page.wait_for_function('document.querySelector("#calibrationText").textContent.includes("اكتملت")')
   assert await page.evaluate('testStreams[0].getTracks().every(t=>t.readyState==="ended")')
