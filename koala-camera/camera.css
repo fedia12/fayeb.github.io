@@ -1,0 +1,11 @@
+/* Experiment only. No camera transforms are applied to the room container or interface. */
+.camera-stage{position:absolute;inset:0;transform-origin:50% 43%;transform:scale(1);will-change:transform;pointer-events:none}
+.camera-stage.camera-stationary{will-change:auto}
+/* Preserve the full reference frame at tablet widths: extra CSS cropping would cut the ears. */
+.camera-stage .art{background-size:200% 200%;background-position-x:0}
+.camera-stage .art-warn,.camera-stage .art-happy{background-position-x:100%}
+.camera-stage .art-recovery{background-size:100% 100%;background-position:center}
+.experiment-note{font-size:11px;color:#755c71;background:#f1e8ee;border:1px solid #e5d7df;border-radius:11px;padding:9px 14px;margin-top:15px;line-height:1.9;text-align:center}
+.experiment-note a{color:#884466;white-space:nowrap}
+#cameraMotionNote{display:block;font-size:10px;font-weight:400;color:#827781;line-height:1.8;margin-top:5px}
+@media(prefers-reduced-motion:reduce){.camera-stage{transform:none!important;will-change:auto}}
