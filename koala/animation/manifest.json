@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "enabled": false,
+  "status": "awaiting-character-animation-assets",
+  "assetRoot": "../assets/animation/",
+  "crossfadeMs": 220,
+  "states": {
+    "sleep": {
+      "entry": {"webm": "sleep-entry.webm", "mp4": "sleep-entry.mp4"},
+      "loop": {"webm": "sleep-loop.webm", "mp4": "sleep-loop.mp4"}
+    },
+    "warn": {
+      "entry": {"webm": "warning-entry.webm", "mp4": "warning-entry.mp4"},
+      "loop": {"webm": "warning-loop.webm", "mp4": "warning-loop.mp4"}
+    },
+    "cry": {
+      "entry": {"webm": "crying-entry.webm", "mp4": "crying-entry.mp4"},
+      "loop": {"webm": "crying-loop.webm", "mp4": "crying-loop.mp4"}
+    },
+    "recovery": {
+      "entry": {"webm": "recovery-entry.webm", "mp4": "recovery-entry.mp4"},
+      "loop": {"webm": "recovery-loop.webm", "mp4": "recovery-loop.mp4"}
+    },
+    "happy": {
+      "entry": {"webm": "celebration-entry.webm", "mp4": "celebration-entry.mp4"},
+      "loop": {"webm": "celebration-loop.webm", "mp4": "celebration-loop.mp4"}
+    }
+  }
+}

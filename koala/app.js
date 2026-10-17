@@ -1,4 +1,6 @@
 import {DreamEngine} from './engine.mjs';
+import {mountCharacterAnimation} from './animation/player.mjs';
+let characterAnimation = null;
 const $=id=>document.getElementById(id),arabic=new Intl.NumberFormat('ar', {numberingSystem:'arab'});
 const messages={sleep:['حلم هادئ','كوالا نائم بهدوء… شكرًا لكنّ.','وقت الأحلام الجميلة'],warn:['نستعيد الهدوء','بدأ كوالا يتململ… لنخفض أصواتنا قليلًا.','قليل من الهدوء يصنع الفرق'],cry:['نساعده معًا','لنأخذ نفسًا هادئًا، ونساعد صديقنا على الاسترخاء.','نستطيع المحاولة مجددًا'],recovery:['عاد الاطمئنان','أصبح أفضل الآن… شكرًا لتعاونكن.','نعود إلى الحلم برفق'],happy:['صباح سعيد','كوالا سعيد بتعاونكن ومحاولاتكن!','حلم جميل بفضلكنّ']};
 let engine=new DreamEngine(),running=false,demo=false,demoMode='quiet',demoSince=0,lastFrame=0,raf=0,stream=null,context=null,analyser=null,samples=null,source=null,baseline=0,operation=0,busy=false,calibrating=false;
@@ -6,6 +8,7 @@ function settings(){return {duration:Math.min(30,Math.max(1,Number($('minutes').
 function format(s){s=Math.ceil(Math.max(0,s));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
 function render(){
  const state=engine.state;
+ characterAnimation?.sync(state, engine.paused);
  if($('room').dataset.state!==state){$('room').dataset.state=state;$('stateTag').textContent=messages[state][0];$('sceneLabel').textContent=messages[state][2];$('room').setAttribute('aria-label',`كوالا وردي صغير: ${messages[state][0]}`);}
  const text=engine.paused?'التحدي متوقف مؤقتًا… نستأنف حين نكون مستعدات.':messages[state][1];
  if($('status').textContent!==text)$('status').textContent=text;
@@ -20,7 +23,7 @@ async function stopAudio(){
  oldStream?.getTracks().forEach(t=>t.stop());if(oldContext&&oldContext.state!=='closed')await oldContext.close().catch(()=>{});
 }
 function stop(){operation++;running=false;cancelAnimationFrame(raf);stopAudio();$('micStatus').textContent='الميكروفون غير مفعّل';}
-function reset(){stop();engine=new DreamEngine(settings());$('result').close();$('demoControls').hidden=true;$('sourceBadge').textContent='جاهز للحلم';$('timerHint').textContent='دقائق صغيرة… وأثر جميل';render();}
+function reset(){stop();characterAnimation?.reset();engine=new DreamEngine(settings());$('result').close();$('demoControls').hidden=true;$('sourceBadge').textContent='جاهز للحلم';$('timerHint').textContent='دقائق صغيرة… وأثر جميل';render();}
 function setBusy(value){busy=value;['micStart','demoStart','calibrate','closeSettings','start','settingsBtn','restart'].forEach(id=>$(id).disabled=value);}
 async function connectMic(token){
  if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia)throw new Error('يلزم اتصال HTTPS أو localhost ومتصفح يدعم الميكروفون.');
@@ -57,4 +60,5 @@ document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>{if(!demo||!ru
 for(let i=0;i<22;i++){const p=document.createElement('i');p.textContent=i%3?'✧':'✦';p.style.cssText=`--x:${5+(i*43)%90}%;--delay:${-i*.31}s;--size:${12+i%5*4}px`;document.querySelector('.celebration').append(p);}
 // Background tabs pause explicitly: no sound is assumed while the classroom is unobserved.
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&running){engine.advance(engine.level,(performance.now()-lastFrame)/1000);lastFrame=performance.now();if(engine.done)finish();else{engine.paused=true;render();}}});
-window.addEventListener('pagehide',()=>{stop();});render();
+window.addEventListener('pagehide',()=>{stop();characterAnimation?.dispose();});render();
+mountCharacterAnimation($('room')).then(player => {characterAnimation=player;characterAnimation?.sync(engine.state,engine.paused);});
